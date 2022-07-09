@@ -1,0 +1,11 @@
+DELETE http://localhost:3001/api/phonebook/Amal%20Khalife
+
+###
+
+POST http://localhost:3001/api/phonebook
+Content-Type: application/json
+
+{
+    "id": "Amal Khalife",
+    "content": "313-520-0020"
+}
