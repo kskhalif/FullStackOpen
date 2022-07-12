@@ -1,0 +1,33 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Seth's Blog",
+  "author": "Seth Godin",
+  "url": "https://seths.blog/",
+  "likes": 0
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Zen Pencils",
+  "author": "Galvin Aun Than",
+  "url": "http://www.zenpencils.com/",
+  "likes": 0
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Wait But Why",
+  "author": "Tim Urban",
+  "url": "https://waitbutwhy.com/",
+  "likes": 0
+}
