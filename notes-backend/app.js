@@ -16,7 +16,10 @@ app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
 
-// app.use(middleware.requestLogger);
+if (process.env.NODE_ENV === 'development') {
+  var requestLogger = require('./utils/requestLogger'); 
+  app.use(requestLogger);
+}
 
 app.use('/api/notes', notesRouter);
 

@@ -1,11 +1,5 @@
 const logger = require('./logger');
 
-// const morgan = require('morgan');
-// morgan.token('body', (request, response) => 
-//     JSON.stringify(request.body)
-// );
-// const requestLogger = morgan(':method :url :status :body');
-
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
