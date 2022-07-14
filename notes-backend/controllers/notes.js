@@ -18,7 +18,7 @@ notesRouter.get('/:id', async (request, response, next) => {
 
 notesRouter.delete('/:id', async (request, response) => {
   const note = await Note.findByIdAndDelete(request.params.id);
-  response.status(204).send(note);
+  note ? response.status(204).send(note) : response.status(400).end();
 });
 
 notesRouter.post('/', async (request, response) => {
@@ -33,6 +33,9 @@ notesRouter.post('/', async (request, response) => {
 
 notesRouter.put('/:id', async (request, response) => {
   const note = await Note.findById(request.params.id);
+  if (!note) {
+    return response.status(400).end();
+  }
   note.important = !note.important;
   const updatedNote = await note.save();
   response.send(updatedNote);
