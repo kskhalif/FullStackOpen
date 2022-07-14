@@ -17,4 +17,19 @@ blogListRouter.post('/', async (request, response) => {
   response.status(201).send(savedBlog);
 });
 
+blogListRouter.delete('/:id', async (request, response) => {
+  const blog = await Blog.findByIdAndDelete(request.params.id);
+  blog ? response.status(204).send(blog) : response.status(400).end();
+});
+
+blogListRouter.put('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  if (!blog) {
+    return response.status(400).end();
+  }
+  blog.likes += 1;
+  const updatedBlog = await blog.save();
+  response.send(updatedBlog);
+});
+
 module.exports = blogListRouter;
