@@ -1,9 +1,22 @@
 const mongoose = require('mongoose');
 
 const noteSchema = new mongoose.Schema({
-    content: { type: String, required: true },
-    date: Date,
-    important: Boolean
+    content: { 
+        type: String, 
+        required: true 
+    },
+    date: { 
+        type: Date,
+        default: new Date()
+    },
+    important: {
+        type: Boolean,
+        default: false
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 noteSchema.set('toJSON', {

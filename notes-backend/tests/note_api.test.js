@@ -3,8 +3,8 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Note = require('../models/note');
-const initialNotes = require('./test_input');
-const helper = require('./test_helpers');
+const initialNotes = require('./note_test_helper').initialNotes;
+const helper = require('./note_test_helper');
 
 beforeEach(async () => {
   await Note.deleteMany({});

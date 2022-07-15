@@ -22,13 +22,9 @@ notesRouter.delete('/:id', async (request, response) => {
 });
 
 notesRouter.post('/', async (request, response) => {
-  const note = new Note({
-      content: request.body.content,
-      date: new Date(),
-      important: false,
-  });
-  const newNote = await note.save();
-  response.status(201).send(newNote);
+  const newNote = new Note(request.body);
+  const savedNote = await newNote.save();
+  response.status(201).send(savedNote);
 });
 
 notesRouter.put('/:id', async (request, response) => {
