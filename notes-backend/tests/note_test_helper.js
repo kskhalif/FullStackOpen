@@ -24,14 +24,17 @@ const initialNotes = async () => {
   return [
     { 
       content: 'mongoose is cool',
+      important: false,
       user: initialUsers[0]._id
     },
     { 
       content: 'jest is also cool',
+      important: false,
       user: initialUsers[1]._id
     },
     { 
       content: 'this note is for testing',
+      important: true,
       user: initialUsers[2]._id
     }
   ];

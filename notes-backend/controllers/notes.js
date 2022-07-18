@@ -3,17 +3,23 @@ const Note = require('../models/note');
 const User = require('../models/user');
 
 notesRouter.get('/all', async (request, response) => {
-  const notes = await Note.find({});
+  const notes = await Note
+    .find({})
+    .populate('user', { username: 1, name: 1 });
   response.send(notes);
 });
 
 notesRouter.get('/important', async (request, response) => {
-  const notes = await Note.find({important: true});
+  const notes = await Note
+    .find({important: true})
+    .populate('user', { username: 1, name: 1 });
   response.send(notes);
 });
 
 notesRouter.get('/:id', async (request, response, next) => {
-  const note = await Note.findById(request.params.id);
+  const note = await Note
+    .findById(request.params.id)
+    .populate('user', { username: 1, name: 1 });
   note ? response.send(note) : response.status(404).end();
 });
 
