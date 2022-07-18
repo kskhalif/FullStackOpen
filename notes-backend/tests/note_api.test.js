@@ -3,12 +3,11 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Note = require('../models/note');
-const initialNotes = require('./note_test_helper').initialNotes;
 const helper = require('./note_test_helper');
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  await Note.insertMany(initialNotes);
+  await Note.insertMany(helper.initialNotes);
 });
 
 describe('when fetching existing notes', () => {
@@ -20,13 +19,15 @@ describe('when fetching existing notes', () => {
   });
   
   test('all notes are returned', async () => {
+    const notes = await helper.notesInDB();
     const response = await api.get('/api/notes/all');
-    expect(response.body).toHaveLength(initialNotes.length);
+    expect(response.body).toHaveLength(notes.length);
   });
   
   test('important notes are returned', async () => {
+    const notes = await helper.notesInDB();
     const response = await api.get('/api/notes/important');
-    const important = initialNotes.filter(note => note.important);
+    const important = notes.filter(note => note.important);
     expect(response.body).toHaveLength(important.length);
   });
   
@@ -73,7 +74,7 @@ describe('when adding a note', () => {
     
     const notes = await helper.notesInDB();
     const contents = notes.map(note => note.content);
-    expect(contents).toHaveLength(initialNotes.length + 1);
+    expect(contents).toHaveLength(helper.initialNotes.length + 1);
     expect(contents).toContain('async/await simplifies life');
   });
   
@@ -84,7 +85,7 @@ describe('when adding a note', () => {
       .expect(400);
   
     const notes = await helper.notesInDB();
-    expect(notes).toHaveLength(initialNotes.length);
+    expect(notes).toHaveLength(helper.initialNotes.length);
   });
 });
 

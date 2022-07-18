@@ -7,7 +7,7 @@ const noteSchema = new mongoose.Schema({
     },
     date: { 
         type: Date,
-        default: new Date()
+        default: Date.now()
     },
     important: {
         type: Boolean,
@@ -15,7 +15,8 @@ const noteSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
 });
 
