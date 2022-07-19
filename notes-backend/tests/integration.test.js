@@ -50,4 +50,69 @@ describe('GET requests', () => {
   });
 });
 
+describe('Login requests', () => {
+  test('valid login returns user details & token', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+    
+    expect(response.body).toHaveProperty('token');
+    expect(response.body).toHaveProperty('username');
+    expect(response.body).toHaveProperty('name');
+  });
+
+  test('invalid username returns 401 + message', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'user4', password: 'P@ssword4' })
+      .expect(401);
+    
+    expect(response.body.error).toBe('invalid username');
+  });
+
+  test('incorrect password returns 401 + message', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword4' })
+      .expect(401);
+    
+    expect(response.body.error).toBe('incorrect password');
+  });
+});
+
+describe('POST /notes', () => {
+  test('a logged in user can post a note', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+
+    const token = loginResponse.body.token;
+    const postResponse = await api
+      .post('/api/notes')
+      .auth(token, { type: 'bearer' })
+      .send({ content: 'Person One here, over and out.' })
+      .expect(201)
+    
+    const savedNote = postResponse.body;
+    const allNotes = await noteHelper.notesInDB();
+    const contents = allNotes.map(note => note.content);
+    expect(contents).toContain(savedNote.content);
+
+    const user = await User.findById(savedNote.user);
+    const noteIDs = user.notes.map(id => id.toString());
+    expect(noteIDs).toContain(savedNote.id);
+  });
+
+  test('invalid token returns 401 + message', async () => {
+    const response = await api
+      .post('/api/notes')
+      .auth('invalid_token', { type: 'bearer' })
+      .expect(401);
+    
+    expect(response.body.error).toBe('invalid token');
+  });
+});
+
 afterAll(() => mongoose.connection.close());
