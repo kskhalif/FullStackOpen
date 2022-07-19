@@ -32,11 +32,6 @@ notesRouter.get('/:id', async (request, response, next) => {
   note ? response.send(note) : response.status(404).end();
 });
 
-notesRouter.delete('/:id', async (request, response) => {
-  const note = await Note.findByIdAndDelete(request.params.id);
-  note ? response.status(204).send(note) : response.status(400).end();
-});
-
 notesRouter.post('/', async (request, response) => {
   const token = getTokenFrom(request);
   const decodedToken = jwt.verify(token, process.env.SECRET);
@@ -49,10 +44,41 @@ notesRouter.post('/', async (request, response) => {
   response.status(201).send(savedNote);
 });
 
-notesRouter.put('/:id', async (request, response) => {
+notesRouter.delete('/:id', async (request, response) => {
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  const user = await User.findById(decodedToken.id);
   const note = await Note.findById(request.params.id);
   if (!note) {
-    return response.status(400).end();
+    return response.status(400).send({ 
+      error: 'note does not exist' 
+    });
+  }
+  if (note.user.toString() !== user._id.toString()) {
+    return response.status(401).send({ 
+      error: 'user not authorized to delete note'
+    });
+  }
+  user.notes = user.notes.filter(id => id.toString() !== note._id.toString());
+  await user.save();
+  await note.remove();
+  response.status(204).end();
+});
+
+notesRouter.put('/:id', async (request, response) => {
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  const user = await User.findById(decodedToken.id);
+  const note = await Note.findById(request.params.id);
+  if (!note) {
+    return response.status(400).send({ 
+      error: 'note does not exist' 
+    });
+  }
+  if (note.user.toString() !== user._id.toString()) {
+    return response.status(401).send({ 
+      error: 'user not authorized to update note'
+    });
   }
   note.important = !note.important;
   const updatedNote = await note.save();
