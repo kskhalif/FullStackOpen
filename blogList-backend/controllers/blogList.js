@@ -52,11 +52,6 @@ blogListRouter.put('/:id', async (request, response) => {
       error: 'blog does not exist'
     });
   }
-  if (blog.user.toString() !== user._id.toString()) {
-    return response.status(401).send({
-      error: 'user not authorized to update blog'
-    });
-  }
   blog.likes += 1;
   const updatedBlog = await blog.save();
   response.send(updatedBlog);
