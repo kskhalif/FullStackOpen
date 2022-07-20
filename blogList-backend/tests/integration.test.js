@@ -220,4 +220,124 @@ describe('GET /blogs', () => {
   });
 });
 
+describe('POST /blogs', () => {
+  test('a logged in user can add a valid blog', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+
+    const token = loginResponse.body.token;
+    const newBlog = {
+      title: "The Ring",
+      author: 'Frodo Baggins',
+      url: 'coming soon!',
+    };
+    const postResponse = await api
+      .post('/api/blogs')
+      .auth(token, { type: 'bearer' })
+      .send(newBlog)
+      .expect(201);
+    
+    const savedBlog = postResponse.body;
+    const allBlogs = await blogHelper.blogsInDB();
+    const titles = allBlogs.map(blog => blog.title);
+    expect(titles).toContain(savedBlog.title);
+
+    const user = await User.findById(savedBlog.user);
+    const blogIDs = user.blogs.map(id => id.toString());
+    expect(blogIDs).toContain(savedBlog._id.toString());
+  });
+
+  test('invalid token returns 401 + message', async () => {
+    const newBlog = {
+      title: "The Ring",
+      author: 'Frodo Baggins',
+      url: 'coming soon!',
+    };
+    const response = await api
+      .post('/api/blogs')
+      .auth(undefined, { type: 'bearer' })
+      .send(newBlog)
+      .expect(401);
+    
+    expect(response.body.error).toBe('invalid token');
+  });
+});
+
+describe('DELETE /blogs', () => {
+  test('a logged in user can delete one of their existing blogs', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+
+    const token = loginResponse.body.token;
+    const user = await User.findOne({ username: 'user1' });
+    const blogToDeleteID = user.blogs[0].toString();
+    const blogToDelete = await Blog.findById(blogToDeleteID);
+    await api
+      .delete(`/api/blogs/${blogToDeleteID}`)
+      .auth(token, { type: 'bearer' })
+      .expect(200);
+    
+    const blogs = await blogHelper.blogsInDB();
+    const titles = blogs.map(blog => blog.title);
+    expect(titles).not.toContain(blogToDelete.title);
+    const userAtEnd = await User.findOne({ username: 'user1' });
+    const blogIDs = userAtEnd.blogs.map(id => id.toString());
+    expect(blogIDs).not.toContain(blogToDeleteID);
+  });
+  
+  test("a logged in user cannot delete another user's blog", async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+
+    const token = loginResponse.body.token;
+    const user = await User.findOne({ username: 'user2' });
+    const blogToDeleteID = user.blogs[0].toString();
+    const deleteResponse = await api
+      .delete(`/api/blogs/${blogToDeleteID}`)
+      .auth(token, { type: 'bearer' })
+      .expect(401);
+    
+    expect(deleteResponse.body.error).toBe('user not authorized to delete blog');
+  });
+});
+
+describe('PUT /blogs', () => {
+  test('a logged in user can "like" an existing blog', async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'user1', password: 'P@ssword1' })
+      .expect(200);
+
+    const token = loginResponse.body.token;
+    const user = await User.findOne({ username: 'user2' });
+    const blogToLikeID = user.blogs[0].toString();
+    const blogToLike = await Blog.findById(blogToLikeID);
+    const putResponse = await api
+      .put(`/api/blogs/${blogToLikeID}`)
+      .auth(token, { type: 'bearer' })
+      .expect(200);
+    
+    const likedBlog = putResponse.body;
+    expect(likedBlog.likes).toBe(blogToLike.likes + 1);
+  });
+
+  test('invalid token returns 401 + message', async () => {
+    const blogs = await blogHelper.blogsInDB();
+    const blogToLike = blogs[0];
+    const id = blogToLike._id.toString();
+    const putResponse = await api
+      .put(`/api/blogs/${id}`)
+      .auth(undefined, { type: 'bearer' })
+      .expect(401);
+    
+    expect(putResponse.body.error).toBe('invalid token');
+  });
+});
+
 afterAll(() => mongoose.connection.close());
