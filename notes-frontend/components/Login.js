@@ -24,7 +24,7 @@ const Login = (props) => {
             />
           </div>
           <button type='submit'>
-            Login
+            login
           </button>
         </form>
         <br/>
@@ -34,7 +34,10 @@ const Login = (props) => {
   else {
     return (
       <p>
-        Welcome, {props.user.name}
+        Welcome, {`${props.user.name} `}
+        <button onClick={props.logout}>
+          logout
+        </button>
       </p>
     );
   }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import jwt from 'jsonwebtoken';
 import './App.css';
+import SECRET from './SECRET';
 
 import noteService from './services/notes';
 import login from './services/login';
@@ -28,12 +30,25 @@ const App = () => {
     });
   }, [flip]);
 
+  const logout = () => {
+    localStorage.removeItem('loggedNoteAppUser');
+    setUser(null);
+    noteService.setToken(null);
+  };
+
   useEffect(() => {
     const loggedUserJSON = localStorage.getItem('loggedNoteAppUser');
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON);
-      setUser(loggedUser);
-      noteService.setToken(loggedUser.token);
+      jwt.verify(loggedUser.token, SECRET, (error) => {
+        if (error) {
+          logout();
+        }
+        else {
+          setUser(loggedUser);
+          noteService.setToken(loggedUser.token);
+        }
+      });
     }
   }, []);
 
@@ -100,14 +115,15 @@ const App = () => {
     const id = note.id;
     const content = note.content;
     const important = note.important;
-    const label = important ? 'mark important' : 'mark not important'; 
+    const label = important ? 'mark important' : 'mark not important';
     noteService
       .update(id)
       .then(() => {
         setLabel(label);
         setFlip(!flip);
       })
-      .catch(() => {
+      .catch((exception) => {
+        console.log(exception);
         setErrorMessage(`"${content}" was already removed`);
         setTimeout(() => setErrorMessage(null), 5000);
       });
@@ -124,6 +140,7 @@ const App = () => {
         handlePasswordChange={handlePasswordChange}
         handleLogin={handleLogin}
         user={user}
+        logout={logout}
       />
       <AddNewNote 
         newNote={newNote} 

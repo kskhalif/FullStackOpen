@@ -28,7 +28,12 @@ const create = async (newNote) => {
 };
 
 const update = async (id) => {
-    const response = await axios.put(`${baseUrl}/${id}`);
+    const config = { 
+        headers: { 
+            Authorization: token 
+        }, 
+    };
+    const response = await axios.put(`${baseUrl}/${id}`, config);
     return response.data;
 };
 
