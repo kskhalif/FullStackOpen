@@ -7,7 +7,7 @@ import noteService from './services/notes';
 import login from './services/login';
 
 import Notification from './components/Notification';
-import Login from './components/Login';
+import Welcome from './components/Welcome';
 import ShowToggle from './components/ShowToggle';
 import Notes from './components/Notes';
 import AddNewNote from './components/AddNewNote';
@@ -85,55 +85,54 @@ const App = () => {
     }
   };
 
-  const addNote = (event) => {
+  const addNote = async (event) => {
     event.preventDefault();
-    noteService
-      .create(newNote)
-      .then(() => {
-        setNewNote('');
-        setFlip(!flip);
-      });
-  };
-
-  const removeNote = (note) => {
-    const id = note.id;
-    const content = note.content;
-    if (confirm(`Remove "${content}"?`)) {
-      noteService
-        .remove(id)
-        .then(() => {
-          setFlip(!flip);
-        })
-        .catch(() => {
-          setErrorMessage(`"${content}" was already removed`);
-          setTimeout(() => setErrorMessage(null), 5000);
-        });
+    try {
+      await noteService.create(newNote);
+      setNewNote('');
+      setFlip(!flip);
+    }
+    catch (exception) {
+      setErrorMessage('note must have content');
+      setTimeout(() => setErrorMessage(null), 5000);
     }
   };
 
-  const toggleImportance = (note, setLabel) => {
+  const removeNote = async (note) => {
     const id = note.id;
     const content = note.content;
+    if (confirm(`Remove "${content}"?`)) {
+      try {
+        await noteService.remove(id);
+        setFlip(!flip);
+      }
+      catch (exception) {
+        setErrorMessage(exception.response.data.error);
+        setTimeout(() => setErrorMessage(null), 5000);
+      }
+    }
+  };
+
+  const toggleImportance = async (note, setLabel) => {
+    const id = note.id;
     const important = note.important;
     const label = important ? 'mark important' : 'mark not important';
-    noteService
-      .update(id)
-      .then(() => {
-        setLabel(label);
-        setFlip(!flip);
-      })
-      .catch((exception) => {
-        console.log(exception);
-        setErrorMessage(`"${content}" was already removed`);
-        setTimeout(() => setErrorMessage(null), 5000);
-      });
+    try {
+      await noteService.update(id);
+      setLabel(label);
+      setFlip(!flip);
+    }
+    catch (exception) {
+      setErrorMessage(exception.response.data.error);
+      setTimeout(() => setErrorMessage(null), 5000);
+    }
   };
 
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      <Login
+      <Welcome
         username={username}
         handleUsernameChange={handleUsernameChange}
         password={password}
