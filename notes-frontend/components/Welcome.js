@@ -9,7 +9,7 @@ const Welcome = (props) => {
   if (props.user !== null) {
     return (
       <p>
-        Welcome, {`${props.user.name} `}
+        Welcome, {`${props.user.name || props.user.username} `}
         <button onClick={props.logout}>
           logout
         </button>
@@ -20,7 +20,7 @@ const Welcome = (props) => {
     return (
       <p>
         <button onClick={() => setUserType('new')}>
-        new user
+          new user
         </button>
         {' '}
         <button onClick={() => setUserType('existing')}>
@@ -38,6 +38,8 @@ const Welcome = (props) => {
           </button>
         </p>
         <SignupForm
+          setUser={props.setUser}
+          setErrorMessage={props.setErrorMessage}
         />
       </div>
     );
@@ -51,11 +53,8 @@ const Welcome = (props) => {
           </button>
         </p>
         <LoginForm
-          username={props.username}
-          handleUsernameChange={props.handleUsernameChange}
-          password={props.password}
-          handlePasswordChange={props.handlePasswordChange}
-          handleLogin={props.handleLogin}
+          setUser={props.setUser}
+          setErrorMessage={props.setErrorMessage}
         />
       </div>
     );
