@@ -8,6 +8,7 @@ import blogService from './services/blogList';
 import Notification from './components/Notification';
 import Welcome from './components/Welcome';
 import AddNewBlog from './components/AddNewBlog';
+import Blogs from './components/Blogs';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -58,9 +59,14 @@ const App = () => {
         setMessage={setMessage}
         logout={logout}
       />
-      <h3>Add a new blog:</h3>
       <AddNewBlog
         user={user}
+        refetch={refetch}
+        setMessage={setMessage}
+      />
+      <Blogs
+        user={user}
+        blogs={blogs}
         refetch={refetch}
         setMessage={setMessage}
       />

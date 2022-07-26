@@ -30,6 +30,7 @@ const AddNewBlog = (props) => {
   if (props.user !== null) {
     return (
       <div>
+        <h3>Add a new blog:</h3>
         <form onSubmit={addBlog}>
           <p>
             Title: {' '}
