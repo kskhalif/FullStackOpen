@@ -4,6 +4,7 @@ const Blog = require('../models/blog');
 blogListRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
+    .populate('likes', { username: 1, name: 1 })
     .populate('user', { username: 1, name: 1 });
   response.send(blogs);
 });
@@ -11,6 +12,7 @@ blogListRouter.get('/', async (request, response) => {
 blogListRouter.get('/:id', async (request, response) => {
   const blog = await Blog
     .findById(request.params.id)
+    .populate('likes', { username: 1, name: 1 })
     .populate('user', {username: 1, name: 1 });
   blog ? response.send(blog) : response.status(404).end();
 });
@@ -52,7 +54,14 @@ blogListRouter.put('/:id', async (request, response) => {
       error: 'blog does not exist'
     });
   }
-  blog.likes += 1;
+  const before = blog.likes;
+  const after = blog.likes.filter(id => id.toString() !== user._id.toString());
+  if (before.length === after.length) {
+    blog.likes = blog.likes.concat(user._id);
+  }
+  else  {
+    blog.likes = after;
+  }
   const updatedBlog = await blog.save();
   response.send(updatedBlog);
 });
