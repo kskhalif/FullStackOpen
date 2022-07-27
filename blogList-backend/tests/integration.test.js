@@ -8,16 +8,7 @@ const blogHelper = require('./blog_test_helper');
 const userHelper = require('./user_test_helper');
 
 beforeEach(async () => {
-  await Blog.deleteMany({});
-  await User.deleteMany({});
-  const initialUsers = await userHelper.intialUsers();
-  const usersInDB = await User.insertMany(initialUsers);
-  const initialBlogs = await blogHelper.initialBlogs();
-  const blogsInDB = await Blog.insertMany(initialBlogs);
-  for (let i = 0; i < 6; ++i) {
-    usersInDB[i % 3].blogs = usersInDB[i % 3].blogs.concat(blogsInDB[i]._id);
-    await usersInDB[i % 3].save();
-  }
+  await api.post('/api/testing/reset');
 });
 
 describe('POST /users', () => {
