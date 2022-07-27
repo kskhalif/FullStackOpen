@@ -27,10 +27,11 @@ const AddNewNote = (props) => {
                 <form onSubmit={addNote}>
                 Add a new note: {' '}
                 <input 
-                    value={newNote} 
+                    value={newNote}
+                    id='new-note-input' 
                     onChange={handleNewNoteChange}
                 />
-                <button type="submit">
+                <button type="submit" id='new-note-button'>
                     save
                 </button>
             </form>

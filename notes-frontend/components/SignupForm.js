@@ -33,6 +33,7 @@ const SignupForm = (props) => {
       setPassword('');
     }
     catch(exception) {
+      console.log(exception);
       props.setErrorMessage(exception.response.data.error);
       setTimeout(() => props.setErrorMessage(null), 5000);
     }

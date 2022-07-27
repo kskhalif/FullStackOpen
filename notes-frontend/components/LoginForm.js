@@ -38,7 +38,7 @@ const LoginForm = (props) => {
           <input
             type="text"
             value={username}
-            name="Username"
+            id="Username"
             onChange={handleUsernameChange}
           />
         </div>
@@ -47,11 +47,11 @@ const LoginForm = (props) => {
           <input
             type="password"
             value={password}
-            name="Password"
+            id="Password"
             onChange={handlePasswordChange}
           />
         </div>
-        <button type='submit'>
+        <button id='login-button' type='submit'>
           login
         </button>
       </form>
