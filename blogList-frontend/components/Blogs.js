@@ -1,42 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import blogService from '../services/blogList';
-
-const Blog = (props) => {
-  const [label, setLabel] = useState(props.initialLabel);
-
-  const likeBlog = async () => {
-    try {
-      await blogService.like(props.blog._id.toString());
-      if (label === 'like') setLabel('unlike');
-      else setLabel('like');
-      props.refetch();
-    }
-    catch (exception) {
-      props.setMessage({ status: false, content: exception.response.data.error });
-      setTimeout(() => props.setMessage({}), 3000);
-    }
-  };
-
-  const likeButton = props.canLike 
-    ? <button onClick={likeBlog}>{label}</button>
-    : null;
-    
-  const removeButton = props.canRemove
-    ? <button onClick={props.removeBlog}>remove</button>
-    : null;
-  
-  return (
-    <li>
-      <a href={props.blog.url} target='_blank'>
-        {props.blog.title}
-      </a>
-      {' '}
-      by {props.blog.author}, likes: {props.blog.likes.length}
-      {' '}
-      {likeButton} {removeButton}
-    </li>
-  );
-};
+import Blog from './Blog';
 
 const Blogs = (props) => {
   const removeBlog = async (blog) => {
@@ -56,7 +20,7 @@ const Blogs = (props) => {
 
   if (props.user !== null) {
     return (
-      <ul>
+      <div>
         {props.blogs.map(blog => {
           const canLike = props.user !== null;
           const canRemove = props.user !== null
@@ -81,7 +45,7 @@ const Blogs = (props) => {
             />
           );
         })}
-      </ul>
+      </div>
     );
   }
 };

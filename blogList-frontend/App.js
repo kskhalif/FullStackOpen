@@ -51,7 +51,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blog List</h1>
+      <h1>BlogListApp</h1>
       <Notification message={message} />
       <Welcome
         user={user}
