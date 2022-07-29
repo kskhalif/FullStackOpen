@@ -37,24 +37,24 @@ const AddNewBlog = (props) => {
           <h3>Add a new blog:</h3>
           <form onSubmit={addBlog}>
             <p>
-              Title: {' '}
               <input
                 value={title}
                 onChange={handleTitleChange}
+                placeholder='Title'
               />
             </p>
             <p>
-              Author: {' '}
               <input
                 value={author}
                 onChange={handleAuthorChange}
+                placeholder='Author'
               />
             </p>
             <p>
-              URL: {' '}
               <input
                 value={url}
                 onChange={handleUrlChange}
+                placeholder='URL'
               />
             </p>
             <button type='submit'>
@@ -64,14 +64,17 @@ const AddNewBlog = (props) => {
               cancel
             </button>
           </form>
+          <br/>
         </div>
       );
     }
     else {
       return (
-        <button onClick={toggleVisibility}>
-          add new blog
-        </button>
+        <p>
+          <button onClick={toggleVisibility}>
+            add new blog
+          </button>
+        </p>
       );
     } 
   }

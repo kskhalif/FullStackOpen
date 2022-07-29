@@ -12,7 +12,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "json-server -p3001 --watch db.json",
     "cypress:open": "cypress open",
@@ -21,6 +21,7 @@
   "proxy": "http://localhost:3001",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0"
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.3.0"
   }
 }

@@ -18,8 +18,7 @@ const Blog = (props) => {
   const likeBlog = async () => {
     try {
       await blogService.like(props.blog._id.toString());
-      if (label === 'like') setLabel('unlike');
-      else setLabel('like');
+      label === 'like' ? setLabel('unlike') : setLabel('like');
       props.refetch();
     }
     catch (exception) {
@@ -36,8 +35,7 @@ const Blog = (props) => {
     ? <button onClick={props.removeBlog}>remove</button>
     : null;
 
-  const details = () => {
-    return visible 
+  const details = () => visible
     ? (
       <div>
         <p>Author: {props.blog.author}</p>
@@ -47,10 +45,9 @@ const Blog = (props) => {
       </div>
     )
     : null;
-  };
  
   return (
-    <p style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <p>
         <a href={props.blog.url} target='_blank'>
           {props.blog.title}
@@ -61,7 +58,7 @@ const Blog = (props) => {
         </button>
       </p>
       {details()}
-    </p>
+    </div>
   );
 };
 

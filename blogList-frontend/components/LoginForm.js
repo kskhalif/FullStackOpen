@@ -36,21 +36,21 @@ const LoginForm = (props) => {
     <div>
       <form onSubmit={handleLogin}>
         <div>
-          Username: {' '}
           <input
             type="text"
             value={username}
             name="Username"
             onChange={handleUsernameChange}
+            placeholder='Username'
           />
         </div>
         <div>
-          Password: {' '}
           <input
             type="password"
             value={password}
             name="Password"
             onChange={handlePasswordChange}
+            placeholder='Password'
           />
         </div>
         <button type='submit'>

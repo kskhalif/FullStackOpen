@@ -44,30 +44,30 @@ const SignupForm = (props) => {
     <div>
       <form onSubmit={handleSignup}>
         <div>
-          Username: {' '}
           <input
             type="text"
             value={username}
             name="Username"
             onChange={handleUsernameChange}
+            placeholder='Username'
           />
         </div>
         <div>
-          Full Name: {' '}
           <input
             type="text"
             value={name}
             name="Name"
             onChange={handleNameChange}
+            placeholder='Name'
           />
         </div>
         <div>
-          Password: {' '}
           <input
             type="password"
             value={password}
             name="Password"
             onChange={handlePasswordChange}
+            placeholder='Password'
           />
         </div>
           <button type='submit'>
