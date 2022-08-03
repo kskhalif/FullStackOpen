@@ -12,7 +12,7 @@ const Note = ({ note }) => {
   return (
     <li key={note.id} onClick={toggleImportance}>
       {note.content} {' '}
-      <strong>{note.important ? 'important' : null}</strong>
+      <strong>{note.important ? '!' : null}</strong>
     </li>
   );
 };

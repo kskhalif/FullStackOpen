@@ -14,7 +14,7 @@ const AddNewNote = () => {
 
   return (
     <form onSubmit={addNote}>
-      <input name='note' />
+      <input name='note' placeholder="a new note..." />
       <button type='submit'>add</button>
     </form>
   );
