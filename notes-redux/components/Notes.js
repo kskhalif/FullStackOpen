@@ -4,12 +4,11 @@ import Note from "./Note";
 
 const Notes = () => {
   const notes = useSelector(({ notes, filter }) => {
-    if (filter === 'ALL') {
-      return notes;
-    }
-    return filter === 'IMPORTANT'
-      ? notes.filter(note => note.important)
-      : notes.filter(note => !note.important);
+    return filter === 'ALL'
+      ? notes
+      : filter === 'IMPORTANT'
+        ? notes.filter(note => note.important)
+        : notes.filter(note => !note.important);
   });
 
   return (
