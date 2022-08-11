@@ -5,8 +5,8 @@ import { toggleImportanceOf } from "../reducers/noteReducer";
 const Note = ({ note }) => {
   const dispatch = useDispatch();
 
-  const toggleImportance = () => {
-    dispatch(toggleImportanceOf(note.id));
+  const toggleImportance = async () => {
+    dispatch(toggleImportanceOf(note));
   };
 
   return (

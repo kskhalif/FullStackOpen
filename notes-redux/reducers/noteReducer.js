@@ -1,30 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
+import noteService from '../services/notes-json-server';
 
 const noteSlice = createSlice({
   name: 'notes',
   initialState: [],
   reducers: {
-    createNote(state, action) {
-      state.push(action.payload);
-    },
-    toggleImportanceOf(state, action) {
-      const id = action.payload;
-      const noteToChange = state.find(n => n.id === id);
-      const changedNote = {
-        ...noteToChange,
-        important: !noteToChange.important
-      };
-      return state.map(n => n.id !== id ? n : changedNote);
-    },
     setNotes(state, action) {
       return action.payload;
-    }
+    },
+    appendNote(state, action) {
+      state.push(action.payload);
+    },
+    updateNote(state, action) {
+      const updatedNote = action.payload;
+      return state.map(n => n.id !== updatedNote.id ? n : updatedNote);
+    },
   }
 });
 
-export const { 
-  createNote, 
-  toggleImportanceOf,
-  setNotes 
-} = noteSlice.actions;
+const { setNotes, appendNote, updateNote } = noteSlice.actions;
+
+export const initializeNotes = () => {
+  return async dispatch => {
+    const notes = await noteService.getAll();
+    dispatch(setNotes(notes));
+  };
+};
+
+export const createNote = content => {
+  return async dispatch => {
+    const newNote = await noteService.create(content);
+    dispatch(appendNote(newNote));
+  };
+};
+
+export const toggleImportanceOf = note => {
+  return async dispatch => {
+    const updatedNote = await noteService.update(note);
+    dispatch(updateNote(updatedNote));
+  };
+};
+
 export default noteSlice.reducer;

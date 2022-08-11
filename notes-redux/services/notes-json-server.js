@@ -12,7 +12,14 @@ const create = async (content) => {
   return response.data;
 };
 
+const update = async (note) => {
+  const updatedNote = { ...note, important: !note.important }; 
+  const response = await axios.put(`${baseUrl}/${note.id}`, updatedNote);
+  return response.data;
+};
+
 export default {
   getAll,
-  create
+  create,
+  update
 };
