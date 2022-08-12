@@ -1,13 +1,31 @@
 {
   "notes": [
     {
-      "content": "the app state is in redux store",
+      "content": "hey - user1",
       "important": true,
+      "id": 3,
+      "user": 1
+    },
+    {
+      "content": "sup - user2",
+      "important": false,
+      "id": 6,
+      "user": 2
+    }
+  ],
+  "users": [
+    {
+      "username": "user1",
+      "name": "Person One",
+      "password": "P@ssword1",
+      "notes": [3],
       "id": 1
     },
     {
-      "content": "state changes are made with actions",
-      "important": false,
+      "username": "user2",
+      "name": "Person Two",
+      "password": "P@ssword2",
+      "notes": [6],
       "id": 2
     }
   ]

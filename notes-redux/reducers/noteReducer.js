@@ -15,14 +15,23 @@ const noteSlice = createSlice({
       const updatedNote = action.payload;
       return state.map(n => n.id !== updatedNote.id ? n : updatedNote);
     },
+    deleteNote(state, action) {
+      const id = action.payload;
+      return state.filter(note => note.id !== id);
+    },
   }
 });
 
-const { setNotes, appendNote, updateNote } = noteSlice.actions;
+const { 
+  setNotes, 
+  appendNote, 
+  updateNote, 
+  deleteNote 
+} = noteSlice.actions;
 
 export const initializeNotes = () => {
   return async dispatch => {
-    const notes = await noteService.getAll();
+    const notes = await noteService.get();
     dispatch(setNotes(notes));
   };
 };
@@ -38,6 +47,13 @@ export const toggleImportanceOf = note => {
   return async dispatch => {
     const updatedNote = await noteService.update(note);
     dispatch(updateNote(updatedNote));
+  };
+};
+
+export const removeNote = id => {
+  return async dispatch => {
+    await noteService.remove(id);
+    dispatch(deleteNote(id));
   };
 };
 
